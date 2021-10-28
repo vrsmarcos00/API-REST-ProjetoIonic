@@ -15,7 +15,7 @@ import com.marcossa.api.apirestproject.repositories.CategoriaRepository;
 public class TestConfig implements CommandLineRunner{
 	
 	@Autowired
-	private CategoriaRepository repository;
+	private CategoriaRepository categoriaRepository;
 
 	@Override
 	public void run(String... args) throws Exception {
@@ -23,7 +23,7 @@ public class TestConfig implements CommandLineRunner{
 		Categoria c1 = new Categoria(null, "Informatica");
 		Categoria c2 = new Categoria(null, "Escritorio");
 		
-		repository.saveAll(Arrays.asList(c1, c2));
+		categoriaRepository.saveAll(Arrays.asList(c1, c2));
 		
 	}
 
