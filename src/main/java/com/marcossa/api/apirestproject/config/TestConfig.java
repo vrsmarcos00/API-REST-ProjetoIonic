@@ -1,5 +1,6 @@
 package com.marcossa.api.apirestproject.config;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +13,20 @@ import com.marcossa.api.apirestproject.domain.Cidade;
 import com.marcossa.api.apirestproject.domain.Cliente;
 import com.marcossa.api.apirestproject.domain.Endereco;
 import com.marcossa.api.apirestproject.domain.Estado;
+import com.marcossa.api.apirestproject.domain.Pagamento;
+import com.marcossa.api.apirestproject.domain.PagamentoComBoleto;
+import com.marcossa.api.apirestproject.domain.PagamentoComCartao;
+import com.marcossa.api.apirestproject.domain.Pedido;
 import com.marcossa.api.apirestproject.domain.Produto;
+import com.marcossa.api.apirestproject.domain.enums.EstadoPagamento;
 import com.marcossa.api.apirestproject.domain.enums.TipoCliente;
 import com.marcossa.api.apirestproject.repositories.CategoriaRepository;
 import com.marcossa.api.apirestproject.repositories.CidadeRepository;
 import com.marcossa.api.apirestproject.repositories.ClienteRepository;
 import com.marcossa.api.apirestproject.repositories.EnderecoRepository;
 import com.marcossa.api.apirestproject.repositories.EstadoRepository;
+import com.marcossa.api.apirestproject.repositories.PagamentoRepository;
+import com.marcossa.api.apirestproject.repositories.PedidoRepository;
 import com.marcossa.api.apirestproject.repositories.ProdutoRepository;
 
 @Configuration
@@ -27,21 +35,20 @@ public class TestConfig implements CommandLineRunner{
 	
 	@Autowired
 	private CategoriaRepository categoriaRepository;
-	
 	@Autowired 
 	private ProdutoRepository produtoRepository;
-	
 	@Autowired
 	private EstadoRepository estadoRepository;
-	
 	@Autowired
 	private CidadeRepository cidadeRepository;
-	
 	@Autowired
 	private ClienteRepository clienteRepository;
-	
 	@Autowired
 	private EnderecoRepository enderecoRepository;
+	@Autowired
+	private PedidoRepository pedidoRepository;
+	@Autowired
+	private PagamentoRepository pagamentoRepository;
 
 	@Override
 	public void run(String... args) throws Exception {
@@ -86,6 +93,22 @@ public class TestConfig implements CommandLineRunner{
 		
 		clienteRepository.saveAll(Arrays.asList(cli1));
 		enderecoRepository.saveAll(Arrays.asList(e1, e2));
+		
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		Pedido ped1 = new Pedido(null, sdf.parse("30/09/2017 10:32"), cli1, e1);
+		Pedido ped2 = new Pedido(null, sdf.parse("10/10/2017 19:35"), cli1, e2);
+		
+		Pagamento pagto1 = new PagamentoComCartao(null, EstadoPagamento.QUITADO, ped1, 6);
+		ped1.setPagamento(pagto1);
+		
+		Pagamento pagto2 = new PagamentoComBoleto(null, EstadoPagamento.PENDENTE, ped2, sdf.parse("20/10/2017 00:00"), null);
+		ped2.setPagamento(pagto2);
+		
+		cli1.getPedidos().addAll(Arrays.asList(ped1, ped2));
+		
+		pedidoRepository.saveAll(Arrays.asList(ped1, ped2));
+		pagamentoRepository.saveAll(Arrays.asList(pagto1, pagto2));
 		
 	}
 
