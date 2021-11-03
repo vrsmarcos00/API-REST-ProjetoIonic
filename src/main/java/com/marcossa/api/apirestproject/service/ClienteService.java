@@ -14,7 +14,7 @@ import com.marcossa.api.apirestproject.service.exception.ObjectNotFoundException
 public class ClienteService {
 	
 	@Autowired
-	ClienteRepository repository;
+	private ClienteRepository repository;
 	
 	public List<Cliente> findAll(){
 		return repository.findAll();

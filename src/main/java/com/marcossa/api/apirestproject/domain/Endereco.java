@@ -27,6 +27,7 @@ public class Endereco implements Serializable{
 	
 	@ManyToOne
 	@JoinColumn(name="cidade_id")
+	@JsonIgnore
 	private Cidade cidade;
 	
 	@ManyToOne
