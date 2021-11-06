@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.marcossa.api.apirestproject.domain.Categoria;
+import com.marcossa.api.apirestproject.domain.dto.CategoriaDTO;
 import com.marcossa.api.apirestproject.service.CategoriaService;
 
 @RestController
@@ -26,8 +27,8 @@ public class CategoriaResource {
 	private CategoriaService service; 
 	
 	@GetMapping
-	public ResponseEntity<List<Categoria>> findAll() {
-		List<Categoria> list = service.findAll();
+	public ResponseEntity<List<CategoriaDTO>> findAll() {
+		List<CategoriaDTO> list = service.findAll();
 		return ResponseEntity.ok().body(list);
 	}
 	
