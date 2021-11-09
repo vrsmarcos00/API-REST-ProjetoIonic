@@ -8,7 +8,9 @@ import javax.validation.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Length;
 
 import com.marcossa.api.apirestproject.domain.Cliente;
+import com.marcossa.api.apirestproject.service.validation.ClientUpdate;
 
+@ClientUpdate
 public class ClienteDTO implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
