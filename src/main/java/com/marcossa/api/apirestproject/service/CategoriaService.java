@@ -34,6 +34,7 @@ public class CategoriaService {
 	}
 	
 	public Categoria insert(Categoria obj) {
+		obj.setId(null);
 		return repository.save(obj);
 	}
 	
