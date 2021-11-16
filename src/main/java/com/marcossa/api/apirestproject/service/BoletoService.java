@@ -1,4 +1,4 @@
-package com.marcossa.api.apirestproject.resources;
+package com.marcossa.api.apirestproject.service;
 
 import java.util.Calendar;
 import java.util.Date;

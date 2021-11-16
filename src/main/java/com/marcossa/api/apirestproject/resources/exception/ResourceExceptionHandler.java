@@ -9,6 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.marcossa.api.apirestproject.service.exception.AuthorizationException;
 import com.marcossa.api.apirestproject.service.exception.DataIntegrityException;
 import com.marcossa.api.apirestproject.service.exception.ObjectNotFoundException;
 
@@ -36,5 +37,11 @@ public class ResourceExceptionHandler {
 			err.addError(x.getField(), x.getDefaultMessage());
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+	}
+	
+	@ExceptionHandler(AuthorizationException.class)
+	public ResponseEntity<StandardError> authorization(AuthorizationException e, HttpServletRequest request) {
+		StandardError err = new StandardError(System.currentTimeMillis(), HttpStatus.FORBIDDEN.value(), e.getMessage());
+		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(err);
 	}
 }

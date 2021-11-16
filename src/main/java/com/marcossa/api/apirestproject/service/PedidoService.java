@@ -15,7 +15,6 @@ import com.marcossa.api.apirestproject.domain.enums.EstadoPagamento;
 import com.marcossa.api.apirestproject.repositories.ItemPedidoRepository;
 import com.marcossa.api.apirestproject.repositories.PagamentoRepository;
 import com.marcossa.api.apirestproject.repositories.PedidoRepository;
-import com.marcossa.api.apirestproject.resources.BoletoService;
 import com.marcossa.api.apirestproject.service.exception.ObjectNotFoundException;
 
 @Service
