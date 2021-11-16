@@ -20,6 +20,7 @@ import com.marcossa.api.apirestproject.domain.PagamentoComCartao;
 import com.marcossa.api.apirestproject.domain.Pedido;
 import com.marcossa.api.apirestproject.domain.Produto;
 import com.marcossa.api.apirestproject.domain.enums.EstadoPagamento;
+import com.marcossa.api.apirestproject.domain.enums.PerfilCliente;
 import com.marcossa.api.apirestproject.domain.enums.TipoCliente;
 import com.marcossa.api.apirestproject.repositories.CategoriaRepository;
 import com.marcossa.api.apirestproject.repositories.CidadeRepository;
@@ -125,14 +126,20 @@ public class DBService {
 
 		Cliente cli1 = new Cliente(null, "Maria Silva", "vrr.marcos@hotmail.com", "000.000.000-00", TipoCliente.PESSOAFISICA, pe.encode("Ma160900"));
 		cli1.getTelefones().addAll(Arrays.asList("61 0000-0000", "61 1111-1111"));
+		
+		Cliente cli2 = new Cliente(null, "Marcos Sá", "vrr.marcos@gmail.com", "000.000.000-11", TipoCliente.PESSOAFISICA, pe.encode("Ma160900"));
+		cli2.addPerfil(PerfilCliente.ADMIN);
+		cli2.getTelefones().addAll(Arrays.asList("61 984880278", "61 33762708"));
 
 		Endereco e1 = new Endereco(null, "Rua Flores", "300", "Apto 203", "Jardim", "38220834", c3, cli1);
 		Endereco e2 = new Endereco(null, "Avenida Matos", "105", "Sala 800", "Centro", "38777013", c2, cli1);
+		Endereco e3 = new Endereco(null, "QNP 28 CONJUNTO U", "12", "rua", "Psul", "72235821", c1, cli2);
 
 		cli1.getEnderecos().addAll(Arrays.asList(e1, e2));
+		cli2.getEnderecos().add(e3);
 
-		clienteRepository.saveAll(Arrays.asList(cli1));
-		enderecoRepository.saveAll(Arrays.asList(e1, e2));
+		clienteRepository.saveAll(Arrays.asList(cli1, cli2));
+		enderecoRepository.saveAll(Arrays.asList(e1, e2, e3));
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		Pedido ped1 = new Pedido(null, sdf.parse("30/09/2017 10:32"), cli1, e1);
