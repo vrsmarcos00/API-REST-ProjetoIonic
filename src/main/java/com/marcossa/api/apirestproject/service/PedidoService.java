@@ -5,9 +5,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.marcossa.api.apirestproject.domain.Cliente;
 import com.marcossa.api.apirestproject.domain.ItemPedido;
 import com.marcossa.api.apirestproject.domain.PagamentoComBoleto;
 import com.marcossa.api.apirestproject.domain.Pedido;
@@ -15,6 +19,8 @@ import com.marcossa.api.apirestproject.domain.enums.EstadoPagamento;
 import com.marcossa.api.apirestproject.repositories.ItemPedidoRepository;
 import com.marcossa.api.apirestproject.repositories.PagamentoRepository;
 import com.marcossa.api.apirestproject.repositories.PedidoRepository;
+import com.marcossa.api.apirestproject.security.UserSS;
+import com.marcossa.api.apirestproject.service.exception.AuthorizationException;
 import com.marcossa.api.apirestproject.service.exception.ObjectNotFoundException;
 
 @Service
@@ -36,7 +42,7 @@ public class PedidoService {
 	private ItemPedidoRepository itemPedidoRepository;
 	
 	@Autowired
-	private ClienteService clientService;
+	private ClienteService clienteService;
 	
 	@Autowired
 	private EmailService emailService;
@@ -54,7 +60,7 @@ public class PedidoService {
 	public Pedido insert(Pedido obj) {
 		obj.setId(null);
 		obj.setInstante(new Date());
-		obj.setCliente(clientService.findById(obj.getCliente().getId()));
+		obj.setCliente(clienteService.findById(obj.getCliente().getId()));
 		obj.getPagamento().setEstado(EstadoPagamento.PENDENTE);
 		obj.getPagamento().setPedido(obj);
 		if (obj.getPagamento() instanceof PagamentoComBoleto) {
@@ -72,6 +78,16 @@ public class PedidoService {
 		itemPedidoRepository.saveAll(obj.getItens());
 		emailService.sendOrderConfirmationHtmlEmail(obj);
 		return obj;
+	}
+	
+	public Page<Pedido> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
+		UserSS user = UserService.authenticated();
+		if (user == null) {
+			throw new AuthorizationException("Acesso Negado");
+		}
+		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+		Cliente cliente = clienteService.findById(user.getId());
+		return repository.findByCliente(cliente, pageRequest);
 	}
 
 }
