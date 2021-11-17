@@ -1,5 +1,6 @@
 package com.marcossa.api.apirestproject.service;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.marcossa.api.apirestproject.domain.Cidade;
 import com.marcossa.api.apirestproject.domain.Cliente;
@@ -38,6 +40,9 @@ public class ClienteService {
 
 	@Autowired
 	private EnderecoRepository endRepository;
+	
+	@Autowired
+	private S3Service s3Service;
 
 	public List<ClienteDTO> findAll() {
 		List<Cliente> list = repository.findAll();
@@ -108,5 +113,9 @@ public class ClienteService {
 	private void updateData(Cliente newObj, Cliente obj) {
 		newObj.setNome(obj.getNome());
 		newObj.setEmail(obj.getEmail());
+	}
+	
+	public URI uploadProfilePicture(MultipartFile multipartFile) {
+		return s3Service.uploadFile(multipartFile);
 	}
 }
