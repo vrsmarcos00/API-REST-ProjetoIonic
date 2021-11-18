@@ -1,11 +1,13 @@
 package com.marcossa.api.apirestproject.service;
 
+import java.awt.image.BufferedImage;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -43,6 +45,12 @@ public class ClienteService {
 	
 	@Autowired
 	private S3Service s3Service;
+	
+	@Autowired
+	private ImageService imageService;
+	
+	@Value("${img.prefix.client.profile}")
+	private String prefix;
 
 	public List<ClienteDTO> findAll() {
 		List<Cliente> list = repository.findAll();
@@ -121,11 +129,8 @@ public class ClienteService {
 			throw new AuthorizationException("Acesso Negado");
 		}
 		
-		URI uri = s3Service.uploadFile(multipartFile);
-		Cliente obj = findById(user.getId());
-		obj.setImageUrl(uri.toString());
-		repository.save(obj);
-		
-		return uri;
+		BufferedImage jpgImage = imageService.getJpgImageFromFile(multipartFile);
+		String fileName = prefix + user.getId() + ".jpg";
+		return s3Service.uploadFile(imageService.getInputStream(jpgImage, "jpg"), fileName, "image");
 	}
 }
