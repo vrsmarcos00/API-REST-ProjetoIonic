@@ -19,6 +19,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.marcossa.api.apirestproject.domain.Pedido;
 import com.marcossa.api.apirestproject.service.PedidoService;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping(value="pedidos")
 public class PedidoResource {
@@ -26,12 +28,14 @@ public class PedidoResource {
 	@Autowired
 	private PedidoService service;
 	
+	@ApiOperation(value="Busca por id")
 	@GetMapping(value="/{id}")
 	public ResponseEntity<Pedido> findById(@PathVariable Integer id){
 		Pedido obj = service.findById(id);
 		return ResponseEntity.ok().body(obj);
 	}
 	
+	@ApiOperation(value="Insere novo Pedido")
 	@PostMapping
 	public ResponseEntity<Void> insert(@Valid @RequestBody Pedido obj) {
 		obj = service.insert(obj);
@@ -40,6 +44,7 @@ public class PedidoResource {
 	}
 	
 
+	@ApiOperation(value="Busca paginada")
 	@GetMapping
 	public ResponseEntity<Page<Pedido>> findPage(
 			@RequestParam(value="page", defaultValue ="0") Integer page, 

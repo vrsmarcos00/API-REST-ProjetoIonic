@@ -17,6 +17,8 @@ import com.marcossa.api.apirestproject.domain.dto.EstadoDTO;
 import com.marcossa.api.apirestproject.service.CidadeService;
 import com.marcossa.api.apirestproject.service.EstadoService;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping(value="estados")
 public class EstadoResource {
@@ -27,6 +29,7 @@ public class EstadoResource {
 	@Autowired
 	private CidadeService cidadeService;
 	
+	@ApiOperation(value="Busca todos os Estados")
 	@GetMapping
 	public ResponseEntity<List<EstadoDTO>> findAll() {
 		List<Estado> list = estadoService.findAll();
@@ -34,6 +37,7 @@ public class EstadoResource {
 		return ResponseEntity.ok().body(listDto);
 	}
 	
+	@ApiOperation(value="Busca todas as cidades")
 	@GetMapping(value="/{estadoId}/cidades")
 	public ResponseEntity<List<CidadeDTO>> findCidades(@PathVariable Integer estadoId) {
 		List<Cidade> list = cidadeService.findCidade(estadoId);

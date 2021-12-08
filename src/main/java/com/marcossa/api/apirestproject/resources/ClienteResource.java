@@ -26,6 +26,8 @@ import com.marcossa.api.apirestproject.domain.dto.ClienteDTO;
 import com.marcossa.api.apirestproject.domain.dto.ClienteNewDTO;
 import com.marcossa.api.apirestproject.service.ClienteService;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping(value = "/clientes")
 public class ClienteResource {
@@ -33,6 +35,7 @@ public class ClienteResource {
 	@Autowired
 	private ClienteService service;
 
+	@ApiOperation(value="Busca todos os Clientes")
 	@PreAuthorize("hasAnyRole('ADMIN')")
 	@GetMapping
 	public ResponseEntity<List<ClienteDTO>> findAll() {
@@ -40,18 +43,21 @@ public class ClienteResource {
 		return ResponseEntity.ok().body(list);
 	}
 
+	@ApiOperation(value="Busca por id")
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<Cliente> findById(@PathVariable Integer id) {
 		Cliente obj = service.findById(id);
 		return ResponseEntity.ok().body(obj);
 	}
 	
+	@ApiOperation(value="Busca por email")
 	@GetMapping(value="/email")
 	public ResponseEntity<Cliente> find(@RequestParam(value="value") String email) {
 		Cliente obj = service.findByEmail(email);
 		return ResponseEntity.ok().body(obj);
 	}
 
+	@ApiOperation(value="Insere novo Cliente")
 	@PostMapping
 	public ResponseEntity<Void> insert(@Valid @RequestBody ClienteNewDTO objDto) {
 		Cliente obj = service.fromDTO(objDto);
@@ -60,6 +66,7 @@ public class ClienteResource {
 		return ResponseEntity.created(uri).build();
 	}
 
+	@ApiOperation(value="Atualiza Cliente")
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<Void> update(@Valid @RequestBody ClienteDTO objDto, @PathVariable Integer id) {
 		Cliente obj = service.fromDTO(objDto);
@@ -68,6 +75,7 @@ public class ClienteResource {
 		return ResponseEntity.noContent().build();
 	}
 
+	@ApiOperation(value="Exclusão de cliente")
 	@PreAuthorize("hasAnyRole('ADMIN')")
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Integer id) {
@@ -75,6 +83,7 @@ public class ClienteResource {
 		return ResponseEntity.noContent().build();
 	}
 
+	@ApiOperation(value="Busca Paginada")
 	@GetMapping(value = "/page")
 	public ResponseEntity<Page<ClienteDTO>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
 			@RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
@@ -85,6 +94,7 @@ public class ClienteResource {
 		return ResponseEntity.ok().body(listDto);
 	}
 	
+	@ApiOperation(value="Envio de imagem")
 	@PostMapping(value="/picture")
 	public ResponseEntity<Void> uploadProfilePicture(@RequestParam(name="file") MultipartFile file) {
 		URI uri = service.uploadProfilePicture(file);

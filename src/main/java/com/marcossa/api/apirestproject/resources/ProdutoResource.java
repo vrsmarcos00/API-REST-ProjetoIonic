@@ -16,6 +16,8 @@ import com.marcossa.api.apirestproject.domain.dto.ProdutoDTO;
 import com.marcossa.api.apirestproject.resources.utils.URL;
 import com.marcossa.api.apirestproject.service.ProdutoService;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping(value = "produtos")
 public class ProdutoResource {
@@ -23,12 +25,14 @@ public class ProdutoResource {
 	@Autowired
 	private ProdutoService service;
 
+	@ApiOperation(value="Busca por id")
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<Produto> findById(@PathVariable Integer id) {
 		Produto obj = service.findById(id);
 		return ResponseEntity.ok().body(obj);
 	}
 
+	@ApiOperation(value="Busca paginada")
 	@GetMapping
 	public ResponseEntity<Page<ProdutoDTO>> findPage(
 			@RequestParam(value = "nome", defaultValue = "") String nome,
